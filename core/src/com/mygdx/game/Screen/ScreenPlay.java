@@ -11,7 +11,8 @@ import com.mygdx.game.Block.Rock;
 import com.mygdx.game.Block.Spike;
 import com.mygdx.game.Entity.Entity;
 import com.mygdx.game.Entity.Player;
-        import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.GameObject;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Projectile.Dart;
 import com.mygdx.game.Projectile.Projectile;
 import com.mygdx.game.ResourseManager;
@@ -19,6 +20,7 @@ import com.mygdx.game.ResourseManager;
 import com.mygdx.game.UiHearts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,6 +38,7 @@ public class ScreenPlay extends Screen{
     private List<Entity> entities;
     private List<Block> blocks;
     private List<Projectile> projectiles = new ArrayList<>();
+    private List<GameObject> renderList = new ArrayList<>();
     Vector2 PlayerWorldStartPosition = new Vector2(0, 0);
     private TouchPad joystick;
     public int WorldStateTime = 0;
@@ -67,6 +70,11 @@ public class ScreenPlay extends Screen{
         blocks.add(rock2);
         blocks.add(spike);
         blocks.add(dartThrower);
+        renderList.add(rock);
+        renderList.add(rock2);
+        renderList.add(spike);
+        renderList.add(dartThrower);
+        renderList.add(player);
     }
 
     @Override
@@ -81,8 +89,11 @@ public class ScreenPlay extends Screen{
         rock2.update(dt);
         spike.update(dt);
         dartThrower.update(dt);
+
         if (WorldStateTime % 200 == 0) {
-            projectiles.add(dartThrower.Shot());
+            dart = dartThrower.Shot();
+            projectiles.add(dart);
+            renderList.add(dart);
         }
         player.setVelocity(joystick.getKnobPercentWalk());
 
@@ -118,15 +129,12 @@ public class ScreenPlay extends Screen{
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        for (Entity entity : entities){
-            entity.render(batch);
+        Collections.sort(renderList);
+
+        for (GameObject obj : renderList) {
+            obj.render(batch);
         }
-        for (Block block : blocks){
-            block.render(batch);
-        }
-        for (Projectile projectile : projectiles){
-            projectile.render(batch);
-        }
+
         uiHealthBar.render(batch, new Vector2(camera.position.x, camera.position.y));
         batch.end();
 

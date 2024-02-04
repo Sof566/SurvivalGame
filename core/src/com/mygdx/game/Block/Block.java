@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameObject;
 
-public abstract class Block{
+public abstract class Block extends GameObject {
     protected Block() {
     }
     public enum LifeStateBlock {
@@ -23,13 +24,11 @@ public abstract class Block{
 
     public LifeStateBlock lifeStateblock = LifeStateBlock.LIFE;
     public BlockType blockType;
-    public Vector2 position = new Vector2(0,0);
     public Vector2 size = new Vector2(0,0);
     public Texture texture = null;
     public int Strength, MaxStrength, stateTime, blockdamage;
     public Rectangle rectangle = null;
 
-    public abstract void render(SpriteBatch batch);
     public abstract void update(float dt);
     public abstract void dispose();
     public abstract Rectangle getRectangle();
