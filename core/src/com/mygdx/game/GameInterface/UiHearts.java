@@ -1,9 +1,10 @@
-package com.mygdx.game;
+package com.mygdx.game.GameInterface;
 
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.MyGdxGame;
 
 public class UiHearts {
 

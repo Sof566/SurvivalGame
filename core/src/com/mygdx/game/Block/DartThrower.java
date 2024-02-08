@@ -62,4 +62,9 @@ public class DartThrower extends Block{
     public Rectangle getRectangle() {
         return rectangle;
     }
+
+    @Override
+    public void collection(Block block) {
+
+    }
 }

@@ -47,12 +47,14 @@ public abstract class Entity extends GameObject {
                     }
                     if (block.blockType == Block.BlockType.pricking) {
                         entity.getDamage(block.blockdamage);
-                        entity.stun = 20;
+                        entity.stun = 0;
                     }
                 }
             }
         }
     }
+
+
 
     public void getDamage(int damage) {
         this.hp -= damage;

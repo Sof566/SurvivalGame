@@ -1,7 +1,10 @@
 package com.mygdx.game.Screen;
 
 import com.badlogic.gdx.Gdx;
-        import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
         import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Block.Block;
@@ -9,23 +12,30 @@ import com.mygdx.game.Block.DartThrower;
 import com.mygdx.game.Block.Grass;
 import com.mygdx.game.Block.Rock;
 import com.mygdx.game.Block.Spike;
+import com.mygdx.game.Button;
 import com.mygdx.game.Entity.Entity;
 import com.mygdx.game.Entity.Player;
+import com.mygdx.game.GameInterface.UiInventory;
+import com.mygdx.game.GameInterface.UniversalButton;
 import com.mygdx.game.GameObject;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Projectile.Dart;
 import com.mygdx.game.Projectile.Projectile;
 import com.mygdx.game.ResourseManager;
-        import com.mygdx.game.TouchPad;
-import com.mygdx.game.UiHearts;
+        import com.mygdx.game.GameInterface.TouchPad;
+import com.mygdx.game.GameInterface.UiHearts;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 public class ScreenPlay extends Screen{
     private GameScreenManager screenManager;
+
+    Texture texture;
+
+
+
     private ResourseManager resourseManager;
     private Player player;
     private Rock rock;
@@ -41,15 +51,19 @@ public class ScreenPlay extends Screen{
     private List<GameObject> renderList = new ArrayList<>();
     Vector2 PlayerWorldStartPosition = new Vector2(0, 0);
     private TouchPad joystick;
+    private UiInventory inventory;
     public int WorldStateTime = 0;
+    private UniversalButton universalButton;
     protected ScreenPlay(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
         this.screenManager = screenManager;
         this.resourseManager = resourseManager;
         loadingCreaturesAndBlocks();
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
-
+        texture = new Texture("images/pol00.png");
         joystick = new TouchPad(camera, resourseManager);
+        inventory = new UiInventory(resourseManager, new Vector2(camera.position.x, camera.position.y));
+        universalButton = new UniversalButton(resourseManager, camera);
         uiHealthBar = new UiHearts(resourseManager.getTexture(ResourseManager.uiHeartTexture),resourseManager.getTexture(ResourseManager.uiHungerTexture));
     }
 
@@ -61,20 +75,24 @@ public class ScreenPlay extends Screen{
         Vector2 pon2 = new Vector2(-300, 100);
         Vector2 pon3 = new Vector2(-500, 100);
         Vector2 pon4 = new Vector2(-700, 100);
+        Vector2 pon5 = new Vector2(-900, 100);
         rock = new Rock(resourseManager, pon);
         rock2 = new Rock(resourseManager, pon2);
         spike = new Spike(resourseManager, pon3);
+        grass = new Grass(resourseManager, pon5);
         dartThrower = new DartThrower(resourseManager, pon4, 45);
         entities.add(player);
         blocks.add(rock);
         blocks.add(rock2);
         blocks.add(spike);
         blocks.add(dartThrower);
+        blocks.add(grass);
         renderList.add(rock);
         renderList.add(rock2);
         renderList.add(spike);
         renderList.add(dartThrower);
         renderList.add(player);
+        renderList.add(grass);
     }
 
     @Override
@@ -90,14 +108,19 @@ public class ScreenPlay extends Screen{
         spike.update(dt);
         dartThrower.update(dt);
 
+        universalButton.update(camera);
+
         if (WorldStateTime % 200 == 0) {
             dart = dartThrower.Shot();
             projectiles.add(dart);
             renderList.add(dart);
         }
+
+
         player.setVelocity(joystick.getKnobPercentWalk());
 
         uiHealthBar.update(dt, player.getHealth(), player.maxHp, player.getHunger());
+        inventory.update(dt, new Vector2(camera.position.x, camera.position.y), camera);
         camera.update();
 
         for (Entity entity : entities) {
@@ -112,6 +135,12 @@ public class ScreenPlay extends Screen{
                 entity.hp = entity.maxHp;
             }
             entity.stateTime = entity.stateTime + 1;
+        }
+
+        for (Block block : blocks) {
+            if (Intersector.overlaps(player.getCheckDist(), block.getRectangle())) {
+                universalButton.isCollision(block);
+            }
         }
 
         for (Projectile projectile : projectiles) {
@@ -129,6 +158,7 @@ public class ScreenPlay extends Screen{
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        batch.draw(texture, -1500, -1500);
         Collections.sort(renderList);
 
         for (GameObject obj : renderList) {
@@ -136,9 +166,15 @@ public class ScreenPlay extends Screen{
         }
 
         uiHealthBar.render(batch, new Vector2(camera.position.x, camera.position.y));
+
+
+
+
         batch.end();
 
         joystick.render(batch);
+        inventory.render(batch);
+        universalButton.render(batch);
     }
 
     @Override
@@ -178,6 +214,11 @@ public class ScreenPlay extends Screen{
 
     @Override
     protected void inputTap() {
-
+        /*universalButton.setClickListener(new Button.onClickListener() {
+            @Override
+            public void click() {
+                System.out.println("dacnkadne");
+            }
+        });*/
     }
 }

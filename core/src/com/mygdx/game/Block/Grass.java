@@ -22,6 +22,7 @@ public class Grass extends Block{
         Strength = MaxStrength = 50;
         size = Size;
         blockType = BlockType.soft;
+        interactionType = InteractionType.SIMPLE;
         rectangle = new Rectangle(position.x, position.y, Size.x, Size.y);
         texture = resourseManager.getTexture(ResourseManager.grassBlock);
         stateTime = 0;
@@ -45,6 +46,8 @@ public class Grass extends Block{
         }
     }
 
+
+
     @Override
     public void dispose() {
 
@@ -53,6 +56,11 @@ public class Grass extends Block{
     @Override
     public Rectangle getRectangle() {
         return rectangle;
+    }
+
+    @Override
+    public void collection(Block block) {
+        texture.dispose();
     }
 }
 

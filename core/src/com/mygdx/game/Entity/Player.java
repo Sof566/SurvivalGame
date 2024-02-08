@@ -20,6 +20,7 @@ public class Player extends Entity{
     Animator animation;
     private int hunger = 100;
     private int invulnerability = 0;
+    private Rectangle checkDist;
 
     public Player(ResourseManager resourseManager, Vector2 startPosition) {
         this.resourseManager = resourseManager;
@@ -31,6 +32,7 @@ public class Player extends Entity{
         hunger = 100;
 
         size = playerSize;
+        checkDist = new Rectangle(0, 0, 200, 200);
         rectangle = new Rectangle(position.x, position.y, size.x, size.y);
         animation = new Animator(resourseManager.getTexture(ResourseManager.xuita), 2, 2, 0.5f, 0, 0);
         this.stateTime = 0;
@@ -43,15 +45,6 @@ public class Player extends Entity{
     }
 
 
-
-    @Override
-    public void render(SpriteBatch batch) {
-        if(lifeState == LifeState.LIFE){
-            batch.draw(animation.getFrame(), position.x, position.y, size.x, size.y);
-        }
-    }
-
-
     @Override
     public void update(float dt, OrthographicCamera camera) {
         if (lifeState == LifeState.LIFE) {
@@ -61,10 +54,18 @@ public class Player extends Entity{
             rectangle.setPosition(position);
             position.x = rectangle.getX();
             position.y = rectangle.getY();
+            checkDist.setPosition(camera.position.x-100, camera.position.y-100);
             starvation(stateTime);
             if (invulnerability > 0){
                 invulnerability -= 1;
             }
+        }
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        if(lifeState == LifeState.LIFE){
+            batch.draw(animation.getFrame(), position.x, position.y, size.x, size.y);
         }
     }
 
@@ -108,6 +109,8 @@ public class Player extends Entity{
 
     }
 
+
+
     @Override
     public void dispose() {
 
@@ -146,4 +149,5 @@ public class Player extends Entity{
     public int getHunger() {
         return hunger;
     }
+    public Rectangle getCheckDist() {return checkDist;}
 }

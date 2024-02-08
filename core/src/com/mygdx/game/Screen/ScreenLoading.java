@@ -14,7 +14,7 @@ public class ScreenLoading extends Screen {
 
     public ScreenLoading(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
-        texture = new Texture(Gdx.files.internal("images/a1.png"));
+        texture = new Texture(Gdx.files.internal("images/SettingsInterface/a1.png"));
         resourseManager.loading();
     }
 

@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameInterface;
 
 
 import com.badlogic.gdx.Gdx;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MyGdxGame;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.ResourseManager;
 
 public class TouchPad {
 

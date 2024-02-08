@@ -50,4 +50,9 @@ public class Rock extends Block{
     public Rectangle getRectangle() {
         return rectangle;
     }
+
+    @Override
+    public void collection(Block block) {
+
+    }
 }

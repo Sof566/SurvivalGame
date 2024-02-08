@@ -26,7 +26,7 @@ public class ScreenSetting extends Screen{
         this.resourseManager = resourseManager;
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
 
-        bcgtexture = resourseManager.getTexture(ResourseManager.bcgLoading);
+        bcgtexture = resourseManager.getTexture(ResourseManager.bcgSetting);
         bttBack = new Button(resourseManager.getTexture(ResourseManager.txtExit), camera.position.x+ vectorExit.x, camera.position.y+vectorExit.y, 200, 100);
         bttVolumePlus = new Button(resourseManager.getTexture(ResourseManager.txtVolumePlus), 200, 200, 100, 100);
         bttVolumeMinus = new Button(resourseManager.getTexture(ResourseManager.txtVolumeMinus), 400, 400, 100, 100);
