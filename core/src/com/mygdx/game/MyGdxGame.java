@@ -14,7 +14,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	private GameScreenManager screenManager;
 	private ResourseManager resourseManager;
 	public static final int SCR_WIDTH = 1280, SCR_HEIGHT = 720;
-
+	public static final int CHUNK = 700;
+	public static boolean TEST_CHUNK = false;
 	public static float VOLUME = 1;
 	
 	@Override
@@ -27,7 +28,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		screenManager.pushScreen(new ScreenLoading(screenManager, resourseManager));
 
 	}
-
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
