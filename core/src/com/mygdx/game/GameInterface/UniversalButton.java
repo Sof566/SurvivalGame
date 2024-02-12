@@ -16,6 +16,7 @@ public class UniversalButton {
     private Button button;
     private Texture texture;
     private state buttonState;
+    Block currentBlock;
 
     public UniversalButton(ResourseManager resourceManager, Camera camera) {
         this.resourceManager = resourceManager;
@@ -27,12 +28,6 @@ public class UniversalButton {
     public void update(Camera camera) {
         button.updatePosition(camera.position.x + 400, camera.position.y - 100);
         button.update(camera);
-        button.setClickListener(new Button.onClickListener() {
-            @Override
-            public void click() {
-
-            }
-        });
     }
 
     public void render(SpriteBatch batch) {
@@ -42,10 +37,16 @@ public class UniversalButton {
     }
 
     public void isCollision(final Block block) {
-        if (buttonState == state.EMPTY) {
-            if(block.interactionType == Block.InteractionType.SIMPLE)
-                block.collection(block);
-        }
+        this.currentBlock = block;
+        button.setClickListener(new Button.onClickListener() {
+            @Override
+            public void click() {
+                if (buttonState == state.EMPTY) {
+                    if(currentBlock.interactionType == Block.InteractionType.SIMPLE)
+                        currentBlock.collection(currentBlock);
+                }
+            }
+        });
     }
 
     // Установка типа кнопки

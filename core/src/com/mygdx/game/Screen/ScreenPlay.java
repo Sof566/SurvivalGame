@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
-        import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Block.Block;
 import com.mygdx.game.Block.DartThrower;
 import com.mygdx.game.Block.Grass;
@@ -45,7 +45,7 @@ public class ScreenPlay extends Screen{
     private Dart dart;
     private UiHearts uiHealthBar;
     private List<Entity> entities;
-    private List<Block> blocks;
+    private static List<Block> blocks;
     private List<Projectile> projectiles = new ArrayList<>();
     private List<GameObject> renderList = new ArrayList<>();
     private List<Chunk> chunkList = new ArrayList<>();
@@ -60,8 +60,8 @@ public class ScreenPlay extends Screen{
         super(screenManager, resourseManager);
         this.screenManager = screenManager;
         this.resourseManager = resourseManager;
-        mapGenerator = new MapGenerator(resourseManager, 121, SEED);
-        chunkList = mapGenerator.generateMap();
+        //mapGenerator = new MapGenerator(resourseManager, 121, SEED);
+        //chunkList = mapGenerator.generateMap();
         loadingCreaturesAndBlocks();
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
         joystick = new TouchPad(camera, resourseManager);
@@ -254,5 +254,9 @@ public class ScreenPlay extends Screen{
                 System.out.println("dacnkadne");
             }
         });*/
+    }
+
+    public static void disposeBlock(Block block) {
+
     }
 }

@@ -50,7 +50,7 @@ public class Grass extends Block{
 
     @Override
     public void dispose() {
-
+        this.texture.dispose();
     }
 
     @Override
@@ -60,7 +60,8 @@ public class Grass extends Block{
 
     @Override
     public void collection(Block block) {
-        texture.dispose();
+        dispose();
     }
+
 }
 

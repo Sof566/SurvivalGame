@@ -14,8 +14,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	private GameScreenManager screenManager;
 	private ResourseManager resourseManager;
 	public static final int SCR_WIDTH = 1280, SCR_HEIGHT = 720;
-	public static final int CHUNK = 700;
-	public static boolean TEST_CHUNK = false;
+	public static final int CHUNK = 10;
+	public static boolean TEST_CHUNK = true;
 	public static float VOLUME = 1;
 	
 	@Override
