@@ -15,7 +15,7 @@ import com.mygdx.game.ResourseManager;
 public class Player extends Entity{
     ResourseManager resourseManager;
     public static final Vector2 playerSize = new Vector2(100, 100);
-    private static final int BASICSPEED = 5;
+    private static final int BASICSPEED = 20;
     private MoveState playerMoveState;
     Animator animation;
     private int hunger = 100;

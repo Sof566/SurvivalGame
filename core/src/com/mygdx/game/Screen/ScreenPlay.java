@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Block.Baobab;
 import com.mygdx.game.Block.Block;
+import com.mygdx.game.Block.Crystal;
 import com.mygdx.game.Block.DartThrower;
 import com.mygdx.game.Block.Grass;
+import com.mygdx.game.Block.Mushroom;
 import com.mygdx.game.Block.Rock;
 import com.mygdx.game.Block.Spike;
 import com.mygdx.game.Button;
@@ -41,6 +44,9 @@ public class ScreenPlay extends Screen{
     private Rock rock;
     private Spike spike;
     private Grass grass;
+    private Mushroom mushroom;
+    private Crystal crystal;
+    private Baobab baobab;
     private DartThrower dartThrower;
     private Dart dart;
     private UiHearts uiHealthBar;
@@ -53,9 +59,10 @@ public class ScreenPlay extends Screen{
     private TouchPad joystick;
     private UiInventory inventory;
     public int WorldStateTime = 0;
-    public long SEED = 9125722410L;
+    public long SEED = 69L;
     int X_CHUNK, Y_CHUNK;
-    private UniversalButton universalButton;
+    private UniversalButton universal;
+    private Button universalButton;
     protected ScreenPlay(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
         this.screenManager = screenManager;
@@ -66,7 +73,8 @@ public class ScreenPlay extends Screen{
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
         joystick = new TouchPad(camera, resourseManager);
         inventory = new UiInventory(resourseManager, new Vector2(camera.position.x, camera.position.y));
-        universalButton = new UniversalButton(resourseManager, camera);
+        universal = new UniversalButton(resourseManager, camera);
+        universalButton = new Button(resourseManager.getTexture(ResourseManager.universalButton), camera.position.x+400, camera.position.y-100, 100, 100);
         uiHealthBar = new UiHearts(resourseManager.getTexture(ResourseManager.uiHeartTexture),resourseManager.getTexture(ResourseManager.uiHungerTexture));
     }
 
@@ -79,20 +87,32 @@ public class ScreenPlay extends Screen{
         Vector2 pon3 = new Vector2(-500, 100);
         Vector2 pon4 = new Vector2(-700, 100);
         Vector2 pon5 = new Vector2(-900, 100);
+        Vector2 pon6 = new Vector2(-100, -100);
+        Vector2 pon7 = new Vector2(-200, -100);
+        Vector2 pon8 = new Vector2(-800, -100);
         rock = new Rock(resourseManager, pon2);
         spike = new Spike(resourseManager, pon3);
         grass = new Grass(resourseManager, pon5);
+        mushroom = new Mushroom(resourseManager, pon6);
+        crystal = new Crystal(resourseManager, pon7);
+        baobab = new Baobab(resourseManager, pon8);
         dartThrower = new DartThrower(resourseManager, pon4, 45);
         entities.add(player);
         blocks.add(rock);
         blocks.add(spike);
         blocks.add(dartThrower);
         blocks.add(grass);
+        blocks.add(mushroom);
+        blocks.add(crystal);
+        blocks.add(baobab);
         renderList.add(rock);
         renderList.add(spike);
         renderList.add(dartThrower);
         renderList.add(player);
         renderList.add(grass);
+        renderList.add(mushroom);
+        renderList.add(crystal);
+        renderList.add(baobab);
     }
 
     @Override
@@ -103,11 +123,11 @@ public class ScreenPlay extends Screen{
 
         player.setVelocity(joystick.getKnobPercentWalk());
         player.update(dt, camera);
-        rock.update(dt);
-        spike.update(dt);
-        dartThrower.update(dt);
 
+
+        universal.update(camera);
         universalButton.update(camera);
+        universalButton.updatePosition(camera.position.x+400, camera.position.y-100);
 
         if (WorldStateTime % 200 == 0) {
             dart = dartThrower.Shot();
@@ -145,11 +165,24 @@ public class ScreenPlay extends Screen{
             entity.stateTime = entity.stateTime + 1;
         }
 
-        for (Block block : blocks) {
-            if (Intersector.overlaps(player.getCheckDist(), block.getRectangle())) {
-                universalButton.isCollision(block);
+        universalButton.setClickListener(new Button.onClickListener() {
+            @Override
+            public void click() {
+                System.out.println("click");
+                for (Block block : blocks) {
+                    if (Intersector.overlaps(player.getRectangle(), block.getRectangle())) {
+                        if (universal.buttonState == UniversalButton.state.EMPTY) {
+                            if(block.interactionType == Block.InteractionType.SIMPLE) {
+                                block.Strength -= 50;
+                                if (block.Strength <= 0) {
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }
+        });
 
         for (Projectile projectile : projectiles) {
             projectile.Collision(entities, blocks, projectiles);
@@ -189,18 +222,21 @@ public class ScreenPlay extends Screen{
 
         uiHealthBar.render(batch, new Vector2(camera.position.x, camera.position.y));
 
+        universalButton.render(batch);
+
         batch.end();
 
         joystick.render(batch);
         inventory.render(batch);
-        universalButton.render(batch);
+
+        universal.render(batch);
     }
 
     public boolean ChunkManager(Chunk chunk) {
         X_CHUNK = (int) Math.ceil((double) player.position.x / MyGdxGame.CHUNK);
         Y_CHUNK = (int) Math.ceil((double) player.position.y / MyGdxGame.CHUNK);
-        if (chunk.getX() >= X_CHUNK - 2 && chunk.getX() <= X_CHUNK + 2) {
-            if (chunk.getY() >= Y_CHUNK - 2 && chunk.getY() <= Y_CHUNK + 2) {
+        if (chunk.getX() >= X_CHUNK - 1 && chunk.getX() <= X_CHUNK + 1) {
+            if (chunk.getY() >= Y_CHUNK - 1 && chunk.getY() <= Y_CHUNK + 1) {
                 return true;
             }
         }
@@ -256,7 +292,5 @@ public class ScreenPlay extends Screen{
         });*/
     }
 
-    public static void disposeBlock(Block block) {
 
-    }
 }

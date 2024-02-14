@@ -38,7 +38,7 @@ public class MapGenerator {
         // Поэтому создаем их их еще раз в больших промежутках
         ChunkIteratorRandomCheckingForBeingNear(1,2, 3, 7, 1);
         // Увеличиваем заливы и озёра, без этого пункта они будут размером в 1 чанк
-        ChunkIteratorRandomCheckingForBeingNear(1,3,3,8, 7);
+        ChunkIteratorRandomCheckingForBeingNear(1,3,3,8, 20);
         // Еще раз увеличиваем всю воду на карте, и даем пограничным териториям тип 4 это важно для генерации пляжей
         ChunkIteratorRandomCheckingForBeingNear(1,3,4,1, 1);
         // Очищаем маленькие одиночные островки
@@ -55,10 +55,23 @@ public class MapGenerator {
         SetBiome( 7, RandInt(3, 5));
         ChunkIteratorRandomCheckingForBeingNear(1, 7, 7, 6, RandInt(10, 15));
         ChunkIteratorRandomCheckingForBeingNearAll(1,7,7,1,1);
+        //Соединяем типы
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                Chunk chunk = chunks[col][row];
+                if (chunk.getTipe() == 3 || chunk.getTipe() == 4) {
+                    chunk.setBiomeType(2);
+                }
+            }
+        }
+        //Удаление биомов в песке и воде
+        ChunkIteratorRandomCheckingForBeingNearAll(6,2,2,1,1);
+        ChunkIteratorRandomCheckingForBeingNearAll(7,2,2,1,1);
+        ChunkIteratorRandomCheckingForBeingNearAll(6,5,5,1,1);
+        ChunkIteratorRandomCheckingForBeingNearAll(7,5,5,1,1);
         // Сглаживание...
         ChunkIteratorSmoothing(1, 5, 8,9,10,11);
-        ChunkIteratorSmoothing(3, 5, 12,13,14,15);
-        ChunkIteratorSmoothing(4, 5, 12,13,14,15);
+        ChunkIteratorSmoothing(2, 5, 12,13,14,15);
         return chunkList;
     }
 
@@ -67,7 +80,6 @@ public class MapGenerator {
             getChunk(RandInt(20, 100), RandInt(20, 100)).setBiomeType(biome);
         }
     }
-
     private Chunk getChunk(int x, int y) { // Получает чанк из заданной колонны и строчки
         if (x >= 0 && x < numCols && y >= 0 && y < numRows) {
             return chunks[x][y];

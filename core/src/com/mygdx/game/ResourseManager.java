@@ -37,6 +37,9 @@ public class ResourseManager {
     public static String inventory = "images/PlayInterface/inventory.png";
     public static String bttBackLock = "images/PlayInterface/bttBackLock.png";
     public static String universalButton = "images/PlayInterface/universalButton.png";
+    public static String mashroom = "images/Blocks/mashroom.png";
+    public static String crystal = "images/Blocks/kristall.png";
+    public static String baobab = "images/Blocks/baobab.png";
 
     public Texture texture;
     public static final String music = "sound/music/audio_gameKapy.mp3";
@@ -76,6 +79,9 @@ public class ResourseManager {
         assetManager.load(inventory, Texture.class);
         assetManager.load(bttBackLock, Texture.class);
         assetManager.load(universalButton, Texture.class);
+        assetManager.load(mashroom, Texture.class);
+        assetManager.load(crystal, Texture.class);
+        assetManager.load(baobab, Texture.class);
     }
 
     public void loadingMusic() {

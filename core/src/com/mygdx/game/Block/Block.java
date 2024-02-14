@@ -9,6 +9,7 @@ import com.mygdx.game.GameObject;
 public abstract class Block extends GameObject {
     protected Block() {
     }
+
     public enum LifeStateBlock {
         Installation,
         LIFE,
@@ -34,8 +35,12 @@ public abstract class Block extends GameObject {
     public int Strength, MaxStrength, stateTime, blockdamage;
     public Rectangle rectangle = null;
 
+    private int id;
+
     public abstract void update(float dt);
     public abstract void dispose();
     public abstract Rectangle getRectangle();
     public abstract void collection(Block block);
+
+
 }

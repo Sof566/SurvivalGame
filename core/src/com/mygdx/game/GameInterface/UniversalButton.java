@@ -10,44 +10,42 @@ import com.mygdx.game.Block.Block;
 import com.mygdx.game.Block.Rock;
 import com.mygdx.game.Button;
 import com.mygdx.game.ResourseManager;
+import com.mygdx.game.Screen.ScreenPlay;
 
 public class UniversalButton {
     private ResourseManager resourceManager;
-    private Button button;
     private Texture texture;
-    private state buttonState;
+    public state buttonState;
     Block currentBlock;
+    private Rectangle rectangle;
 
     public UniversalButton(ResourseManager resourceManager, Camera camera) {
         this.resourceManager = resourceManager;
         this.texture = resourceManager.getTexture(ResourseManager.universalButton);
-        this.button = new Button(texture, camera.position.x + 400, camera.position.y - 100, 100, 100);
+        rectangle = new Rectangle(camera.position.x+400, camera.position.y-100, 100, 100);
         this.buttonState = state.EMPTY;
     }
 
     public void update(Camera camera) {
-        button.updatePosition(camera.position.x + 400, camera.position.y - 100);
-        button.update(camera);
+        rectangle.setPosition(camera.position.x+400, camera.position.y-100);
     }
 
     public void render(SpriteBatch batch) {
         batch.begin();
-        button.render(batch);
+        batch.draw(resourceManager.getTexture(ResourseManager.universalButton), rectangle.x, rectangle.y);
         batch.end();
     }
 
-    public void isCollision(final Block block) {
-        this.currentBlock = block;
-        button.setClickListener(new Button.onClickListener() {
-            @Override
-            public void click() {
-                if (buttonState == state.EMPTY) {
-                    if(currentBlock.interactionType == Block.InteractionType.SIMPLE)
-                        currentBlock.collection(currentBlock);
+    /*public void isCollision(final Block block) {
+        if (buttonState == state.EMPTY) {
+            if(currentBlock.interactionType == Block.InteractionType.SIMPLE) {
+                block.Strength -= 50;
+                if (block.Strength <= 0) {
+                    ScreenPlay.disposeBlock(block);
                 }
             }
-        });
-    }
+        }
+    }*/
 
     // Установка типа кнопки
     public void setButtonState(state newState) {
