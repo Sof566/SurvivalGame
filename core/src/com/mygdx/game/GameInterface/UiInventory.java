@@ -1,60 +1,84 @@
 package com.mygdx.game.GameInterface;
 
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Button;
+import com.mygdx.game.Chunk;
+import com.mygdx.game.Entity.Entity;
+import com.mygdx.game.Items.Items;
 import com.mygdx.game.ResourseManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UiInventory {
-    public Button bttOpening, bttBack;
     ResourseManager resourseManager;
     private boolean isOpen;
-    Vector2 cameraPos;
-    private Rectangle inventoryPos;
+    private int  numRows = 3;
+    private int  numCols = 5;
+    private InventorySlot[][] items;
+    private List<InventorySlot> itemsList = new ArrayList<>();
+    public enum State {
+        UP, DOWN
+    }
+    public State state = State.DOWN;
 
-    public UiInventory(ResourseManager resourseManager, Vector2 cameraPos) {
+    public UiInventory(ResourseManager resourseManager) {
         this.resourseManager = resourseManager;
-        bttOpening = new Button(resourseManager.getTexture(ResourseManager.backpack), cameraPos.x+400, cameraPos.y-350, 100, 100);
-        bttBack = new Button(resourseManager.getTexture(ResourseManager.bttBackLock), cameraPos.x+340, cameraPos.y-350, 50, 50);
-        inventoryPos = new Rectangle(cameraPos.x, cameraPos.y, 200, 200);
-        isOpen = false;
-        this.cameraPos = cameraPos;
+        this.isOpen = false;
+        this.items = new InventorySlot[numCols][numRows];
     }
-    public void update(float dt, Vector2 cameraPos, Camera camera) {
-        bttOpening.updatePosition(cameraPos.x+400, cameraPos.y-350);
-        bttOpening.update(camera);
-        bttBack.update(camera);
-        bttBack.updatePosition(cameraPos.x+360, cameraPos.y-350);
-        inventoryPos.setPosition(cameraPos.x+400, cameraPos.y-350);
 
-        if(!isOpen) {
-            bttOpening.setClickListener(new Button.onClickListener() {
-                @Override
-                public void click() {
-                    isOpen = true;
-                }
-            });
+    public List<InventorySlot> GenerateInventory(){ // Создает пустой инвентарь, используйте в начале игры при заходе в мир
+        int cellNumber = 1;
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                Vector2 position = new Vector2(col * 70, row * 70);
+                InventorySlot inventorySlot = new InventorySlot(resourseManager, position, 0, cellNumber);
+                items[col][row] = inventorySlot;
+                itemsList.add(inventorySlot);
+                cellNumber++;
+            }
         }
-        if(isOpen) {
-            bttBack.setClickListener(new Button.onClickListener() {
-                @Override
-                public void click() {
-                    isOpen = false;
-                }
-            });
-        }
-
+        return itemsList;
     }
-    public void render(SpriteBatch batch) {
-        batch.begin();
-        if(!isOpen) bttOpening.render(batch);
-        if(isOpen) {
-            batch.draw(resourseManager.getTexture(ResourseManager.inventory), inventoryPos.x, inventoryPos.y, inventoryPos.width, inventoryPos.height);
-            bttBack.render(batch);
+
+    public void ChangeInventoryPlus(int ID){  // Добавит в инвентарь вещь при условии свободного места
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                if (items[col][row].getTipe() == 0){
+                    items[col][row].setItemType(ID);
+                }
+            }
         }
-        batch.end();
+    }
+    public void ChangeInventoryMinus(int ID){  // Удалить из инвентаря предмет
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                if (items[col][row].getTipe() == ID){
+                    items[col][row].setItemType(0);
+                }
+            }
+        }
+    }
+
+    public void UpInventory(){
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                switch (state) {
+                    case DOWN:
+                        items[col][row].setVector(-1);
+                        state = State.UP;
+                        break;
+                    case UP:
+                        items[col][row].setVector(1);
+                        state = State.DOWN;
+                        break;
+                }
+            }
+        }
     }
 
     public void dispose() {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameInterface.UiInventory;
 import com.mygdx.game.Projectile.Dart;
 import com.mygdx.game.Projectile.Projectile;
 import com.mygdx.game.ResourseManager;
@@ -64,7 +65,7 @@ public class DartThrower extends Block{
     }
 
     @Override
-    public void collection(Block block) {
+    public void collection(UiInventory uiInventory) {
 
     }
 }

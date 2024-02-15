@@ -4,7 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
         import com.badlogic.gdx.graphics.g2d.SpriteBatch;
         import com.badlogic.gdx.math.Rectangle;
         import com.badlogic.gdx.math.Vector2;
-        import com.mygdx.game.ResourseManager;
+import com.mygdx.game.GameInterface.UiInventory;
+import com.mygdx.game.ResourseManager;
 
 public class Mushroom extends Block{
     private ResourseManager resourseManager;
@@ -45,8 +46,7 @@ public class Mushroom extends Block{
     }
 
     @Override
-    public void collection(Block block) {
-
+    public void collection(UiInventory uiInventory) {
     }
 
     @Override

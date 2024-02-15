@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entity.Entity;
+import com.mygdx.game.GameInterface.UiInventory;
 import com.mygdx.game.ResourseManager;
 
 public class Spike extends Block{
@@ -44,7 +45,7 @@ public class Spike extends Block{
 
     @Override
     public void dispose() {
-
+        this.texture.dispose();
     }
 
     @Override
@@ -53,7 +54,6 @@ public class Spike extends Block{
     }
 
     @Override
-    public void collection(Block block) {
-
+    public void collection(UiInventory uiInventory) {
     }
 }

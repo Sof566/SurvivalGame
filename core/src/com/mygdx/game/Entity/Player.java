@@ -15,7 +15,7 @@ import com.mygdx.game.ResourseManager;
 public class Player extends Entity{
     ResourseManager resourseManager;
     public static final Vector2 playerSize = new Vector2(100, 100);
-    private static final int BASICSPEED = 20;
+    private static final int BASICSPEED = 5;
     private MoveState playerMoveState;
     Animator animation;
     private int hunger = 100;
@@ -32,7 +32,7 @@ public class Player extends Entity{
         hunger = 100;
 
         size = playerSize;
-        checkDist = new Rectangle(0, 0, 200, 200);
+        checkDist = new Rectangle(-50, -50, 200, 200);
         rectangle = new Rectangle(position.x, position.y, size.x, size.y);
         animation = new Animator(resourseManager.getTexture(ResourseManager.xuita), 2, 2, 0.5f, 0, 0);
         this.stateTime = 0;
@@ -54,7 +54,7 @@ public class Player extends Entity{
             rectangle.setPosition(position);
             position.x = rectangle.getX();
             position.y = rectangle.getY();
-            checkDist.setPosition(camera.position.x-100, camera.position.y-100);
+            checkDist.setPosition(position.x - 50, position.x + 50);
             starvation(stateTime);
             if (invulnerability > 0){
                 invulnerability -= 1;

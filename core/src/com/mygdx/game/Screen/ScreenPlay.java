@@ -19,9 +19,11 @@ import com.mygdx.game.Button;
 import com.mygdx.game.Chunk;
 import com.mygdx.game.Entity.Entity;
 import com.mygdx.game.Entity.Player;
+import com.mygdx.game.GameInterface.InventorySlot;
 import com.mygdx.game.GameInterface.UiInventory;
 import com.mygdx.game.GameInterface.UniversalButton;
 import com.mygdx.game.GameObject;
+import com.mygdx.game.Items.Items;
 import com.mygdx.game.MapGenerator;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Projectile.Dart;
@@ -32,6 +34,7 @@ import com.mygdx.game.GameInterface.UiHearts;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class ScreenPlay extends Screen{
@@ -40,6 +43,7 @@ public class ScreenPlay extends Screen{
 
     private ResourseManager resourseManager;
     private MapGenerator mapGenerator;
+    private UiInventory uiInventory;
     private Player player;
     private Rock rock;
     private Spike spike;
@@ -51,28 +55,32 @@ public class ScreenPlay extends Screen{
     private Dart dart;
     private UiHearts uiHealthBar;
     private List<Entity> entities;
-    private static List<Block> blocks;
+    private List<Block> blocks;
     private List<Projectile> projectiles = new ArrayList<>();
     private List<GameObject> renderList = new ArrayList<>();
     private List<Chunk> chunkList = new ArrayList<>();
+    private List<InventorySlot> itemsList = new ArrayList<>();
     Vector2 PlayerWorldStartPosition = new Vector2(0, 0);
     private TouchPad joystick;
     private UiInventory inventory;
     public int WorldStateTime = 0;
-    public long SEED = 69L;
+    public long SEED = 6942L;
     int X_CHUNK, Y_CHUNK;
     private UniversalButton universal;
     private Button universalButton;
+    Button bttInventory;
     protected ScreenPlay(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
         this.screenManager = screenManager;
         this.resourseManager = resourseManager;
         //mapGenerator = new MapGenerator(resourseManager, 121, SEED);
         //chunkList = mapGenerator.generateMap();
+        uiInventory = new UiInventory(resourseManager);
+        itemsList = uiInventory.GenerateInventory();
         loadingCreaturesAndBlocks();
+        bttInventory = new Button(resourseManager.getTexture(ResourseManager.bttBackLock), 400, -250, 100, 100);
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
         joystick = new TouchPad(camera, resourseManager);
-        inventory = new UiInventory(resourseManager, new Vector2(camera.position.x, camera.position.y));
         universal = new UniversalButton(resourseManager, camera);
         universalButton = new Button(resourseManager.getTexture(ResourseManager.universalButton), camera.position.x+400, camera.position.y-100, 100, 100);
         uiHealthBar = new UiHearts(resourseManager.getTexture(ResourseManager.uiHeartTexture),resourseManager.getTexture(ResourseManager.uiHungerTexture));
@@ -127,7 +135,10 @@ public class ScreenPlay extends Screen{
 
         universal.update(camera);
         universalButton.update(camera);
-        universalButton.updatePosition(camera.position.x+400, camera.position.y-100);
+        bttInventory.update(camera);
+        universalButton.updatePosition(camera.position.x + 400, camera.position.y - 100);
+        bttInventory.updatePosition(camera.position.x + 400, camera.position.y - 200);
+
 
         if (WorldStateTime % 200 == 0) {
             dart = dartThrower.Shot();
@@ -148,7 +159,6 @@ public class ScreenPlay extends Screen{
         }
 
         uiHealthBar.update(dt, player.getHealth(), player.maxHp, player.getHunger());
-        inventory.update(dt, new Vector2(camera.position.x, camera.position.y), camera);
         camera.update();
 
         for (Entity entity : entities) {
@@ -164,26 +174,6 @@ public class ScreenPlay extends Screen{
             }
             entity.stateTime = entity.stateTime + 1;
         }
-
-        universalButton.setClickListener(new Button.onClickListener() {
-            @Override
-            public void click() {
-                System.out.println("click");
-                for (Block block : blocks) {
-                    if (Intersector.overlaps(player.getRectangle(), block.getRectangle())) {
-                        if (universal.buttonState == UniversalButton.state.EMPTY) {
-                            if(block.interactionType == Block.InteractionType.SIMPLE) {
-                                block.Strength -= 50;
-                                if (block.Strength <= 0) {
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
         for (Projectile projectile : projectiles) {
             projectile.Collision(entities, blocks, projectiles);
             if (projectile.stateTime >= projectile.lifetime){
@@ -195,40 +185,47 @@ public class ScreenPlay extends Screen{
             player.dispose();
             screenManager.setScreen(new ScreenMenu(screenManager, resourseManager));
         }
-
         for (Chunk chunk : chunkList) {
             if (ChunkManager(chunk)){
                 chunk.update(dt);
             }
         }
+        for (InventorySlot inventorySlot : itemsList) {
+            inventorySlot.update(dt);
+        }
+        for (Iterator<Block> iterator = blocks.iterator(); iterator.hasNext();) {
+            Block block = iterator.next();
+            block.update(dt);
+            if (block.Strength <= 0) {
+                block.collection(uiInventory);
+                iterator.remove();
+                renderList.remove(block);
+            }
+        }
+
     }
 
     @Override
     protected void render(SpriteBatch batch) {
         batch.setProjectionMatrix(camera.combined);
-
         batch.begin();
         for (Chunk chunk : chunkList) {
             if (ChunkManager(chunk)){
                 chunk.render(batch);
             }
         }
-
         Collections.sort(renderList);
         for (GameObject obj : renderList) {
             obj.render(batch);
         }
-
-
         uiHealthBar.render(batch, new Vector2(camera.position.x, camera.position.y));
-
+        for (InventorySlot inventorySlot : itemsList) {
+            inventorySlot.render(batch, new Vector2(camera.position.x, camera.position.y));
+        }
         universalButton.render(batch);
-
+        bttInventory.render(batch);
         batch.end();
-
         joystick.render(batch);
-        inventory.render(batch);
-
         universal.render(batch);
     }
 
@@ -284,13 +281,23 @@ public class ScreenPlay extends Screen{
 
     @Override
     protected void inputTap() {
-        /*universalButton.setClickListener(new Button.onClickListener() {
+        mousePosition = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(mousePosition);
+        bttInventory.setClickListener(new Button.onClickListener() {
             @Override
             public void click() {
-                System.out.println("dacnkadne");
+                uiInventory.UpInventory();
             }
-        });*/
+        });
+        universalButton.setClickListener(new Button.onClickListener() {
+            @Override
+            public void click() {
+                for (Block block : blocks) {
+                    if (Intersector.overlaps(player.getRectangle(), block.getRectangle())) {
+                        universal.Interaction(block.interactionType, block);
+                    }
+                }
+            }
+        });
     }
-
-
 }
