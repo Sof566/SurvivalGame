@@ -22,30 +22,21 @@ public class TouchPad {
     ResourseManager resourseManager;
 
     public TouchPad(OrthographicCamera camera, ResourseManager resourseManager) {
-        //Create camera
         this.camera = camera;
         this.resourseManager = resourseManager;
 
         Viewport viewport = new FitViewport(MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT, camera);
 
-        //Create a touchpad skin
         Skin touchpadSkin = new Skin();
-        //Set background image
         touchpadSkin.add(ResourseManager.touchBackground, resourseManager.getTexture(ResourseManager.touchBackground));
-        //Set knob image
         touchpadSkin.add(ResourseManager.touchKnob, resourseManager.getTexture(ResourseManager.touchKnob));
-        //Create TouchPad Style
         Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
-        //Create Drawable's from TouchPad skin
         Drawable touchBackground = touchpadSkin.getDrawable(ResourseManager.touchBackground);
         Drawable touchKnob = touchpadSkin.getDrawable(ResourseManager.touchKnob);
-        //Apply the Drawables to the TouchPad Style
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
-        //Create new TouchPad with the created style
         touchpad = new Touchpad(10, touchpadStyle);
 
-        //Create a Stage and add TouchPad
         Stage stage = new Stage(viewport, new SpriteBatch());
         stage.addActor(touchpad);
         Gdx.input.setInputProcessor(stage);

@@ -7,19 +7,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Button;
+import com.mygdx.game.GameInterface.Button;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ResourseManager;
 
-public class ScreenSetting extends Screen{
+public class ScreenSetting extends Screen {
     private GameScreenManager screenManager;
     private ResourseManager resourseManager;
     private Texture bcgtexture;
-    private Button bttBack, bttVolumePlus, bttVolumeMinus;
+    private Button bttBack, bttVolumePlus, bttVolumeMinus, bttTrans;
     private Music music;
-    Vector2 vectorExit = new Vector2(-640,260);
 
-    protected ScreenSetting(GameScreenManager screenManager, ResourseManager resourseManager) {
+
+    Vector2 vectorExit = new Vector2(-640, 260);
+
+    protected ScreenSetting(GameScreenManager screenManager, ResourseManager resourseManager, Music music) {
         super(screenManager, resourseManager);
 
         this.screenManager = screenManager;
@@ -27,15 +29,11 @@ public class ScreenSetting extends Screen{
         camera.setToOrtho(false, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
 
         bcgtexture = resourseManager.getTexture(ResourseManager.bcgSetting);
-        bttBack = new Button(resourseManager.getTexture(ResourseManager.txtExit), camera.position.x+ vectorExit.x, camera.position.y+vectorExit.y, 200, 100);
-        bttVolumePlus = new Button(resourseManager.getTexture(ResourseManager.txtVolumePlus), 200, 200, 100, 100);
+        bttBack = new Button(resourseManager.getTexture(ResourseManager.txtExit), camera.position.x + vectorExit.x, camera.position.y + vectorExit.y, 200, 100);
+        bttVolumePlus = new Button(resourseManager.getTexture(ResourseManager.txtVolumePlus), 200, 400, 100, 100);
         bttVolumeMinus = new Button(resourseManager.getTexture(ResourseManager.txtVolumeMinus), 400, 400, 100, 100);
-
-
-        music = resourseManager.getMusic(ResourseManager.music);
-        music.setLooping(true);
-        music.setVolume(MyGdxGame.VOLUME);
-        music.play();
+        bttTrans = new Button(resourseManager.getTexture(ResourseManager.bttTranslTranslationRUS), 100, 100, 100, 50);
+        this.music = music;
     }
 
     @Override
@@ -43,6 +41,8 @@ public class ScreenSetting extends Screen{
         mousePosition = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         inputTap();
         camera.update();
+        
+
     }
 
     @Override
@@ -52,15 +52,18 @@ public class ScreenSetting extends Screen{
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        batch.draw(bcgtexture, 0,0, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
+        batch.draw(bcgtexture, 0, 0, MyGdxGame.SCR_WIDTH, MyGdxGame.SCR_HEIGHT);
         bttBack.render(batch);
         bttVolumeMinus.render(batch);
         bttVolumePlus.render(batch);
+        bttTrans.render(batch);
         batch.end();
 
         bttBack.update(camera);
         bttVolumePlus.update(camera);
         bttVolumeMinus.update(camera);
+        bttTrans.update(camera);
+
     }
 
     @Override
@@ -109,22 +112,35 @@ public class ScreenSetting extends Screen{
         bttVolumePlus.setClickListener(new Button.onClickListener() {
             @Override
             public void click() {
-                MyGdxGame.VOLUME += 0.1;
-                if (MyGdxGame.VOLUME < 0){
-                    MyGdxGame.VOLUME = 1;
+                MyGdxGame.VOLUME += 1;
+                if (MyGdxGame.VOLUME > 10) {
+                    MyGdxGame.VOLUME = 10;
                 }
+                music.setVolume(MyGdxGame.VOLUME / 10);
             }
         });
         bttVolumeMinus.setClickListener(new Button.onClickListener() {
             @Override
             public void click() {
-                MyGdxGame.VOLUME -= 0.1;
-                if (MyGdxGame.VOLUME < 0){
+                MyGdxGame.VOLUME -= 1;
+                if (MyGdxGame.VOLUME < 0) {
                     MyGdxGame.VOLUME = 0;
+                }
+                music.setVolume(MyGdxGame.VOLUME / 10);
+            }
+        });
+
+        bttTrans.setClickListener(new Button.onClickListener() {
+            @Override
+            public void click() {
+                if(MyGdxGame.language == 1) {
+                    bttTrans.changeTexture(resourseManager.getTexture(ResourseManager.bttTranslTranslationANGL));
+                    MyGdxGame.language = 0;
+                } else {
+                    bttTrans.changeTexture(resourseManager.getTexture(ResourseManager.bttTranslTranslationRUS));
+                    MyGdxGame.language = 1;
                 }
             }
         });
     }
 }
-
-

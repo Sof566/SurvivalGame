@@ -1,6 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.Map;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Map.Chunk;
+import com.mygdx.game.ResourseManager;
+
 import java.util.ArrayList;
 import java.util.List;
 

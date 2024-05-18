@@ -1,13 +1,6 @@
 package com.mygdx.game.GameInterface;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Button;
-import com.mygdx.game.Chunk;
-import com.mygdx.game.Entity.Entity;
-import com.mygdx.game.Items.Items;
 import com.mygdx.game.ResourseManager;
 
 import java.util.ArrayList;

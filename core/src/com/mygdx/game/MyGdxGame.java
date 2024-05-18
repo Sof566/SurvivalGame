@@ -15,9 +15,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	private ResourseManager resourseManager;
 	public static final int SCR_WIDTH = 1280, SCR_HEIGHT = 720;
 	public static final int CHUNK = 10;
-	public static boolean TEST_CHUNK = true;
-	public static float VOLUME = 1;
-	
+	public static boolean TEST_CHUNK = false;
+	public static float VOLUME = 0;
+	public static int language = 1; //1 - английский, 0 - русский
+
+
 	@Override
 	public void create () {
 		spriteBatch = new SpriteBatch();
@@ -26,13 +28,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.input.setCatchBackKey(true);
 		screenManager.pushScreen(new ScreenLoading(screenManager, resourseManager));
-
 	}
+
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		screenManager.update(Gdx.graphics.getDeltaTime());
 		screenManager.render(spriteBatch);
+
 	}
 	
 	@Override

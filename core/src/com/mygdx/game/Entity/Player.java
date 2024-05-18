@@ -3,10 +3,7 @@ package com.mygdx.game.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Animator;
@@ -15,7 +12,7 @@ import com.mygdx.game.ResourseManager;
 public class Player extends Entity{
     ResourseManager resourseManager;
     public static final Vector2 playerSize = new Vector2(100, 100);
-    private static final int BASICSPEED = 5;
+    private static final int BASICSPEED = 15;
     private MoveState playerMoveState;
     Animator animation;
     private int hunger = 100;
@@ -136,8 +133,8 @@ public class Player extends Entity{
             invulnerability = 60;
         }
     }
-    public void starvation(int statetime){
-        if (statetime % 300 == 0){
+    public void starvation(int stateTime){
+        if (stateTime % 300 == 0){
             hunger -= 1;
             if (hunger <= 0){
                 this.hp -= 1;

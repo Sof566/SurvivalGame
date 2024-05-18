@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameInterface;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -52,5 +52,9 @@ public class Button {
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
+
+    public void changeTexture(Texture texture) {
+        this.texture = texture;
     }
 }

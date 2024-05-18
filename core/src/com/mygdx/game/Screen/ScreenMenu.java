@@ -1,16 +1,16 @@
 package com.mygdx.game.Screen;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Animator;
-import com.mygdx.game.Button;
-import com.mygdx.game.Entity.Player;
+import com.mygdx.game.GameInterface.Button;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ResourseManager;
 
@@ -25,6 +25,8 @@ public class ScreenMenu extends Screen{
     Vector2 vectorSettings = new Vector2(520, 240);
     Vector2 vectorStart = new Vector2(-150, -75);
     Button bttExit, bttSettings, bttPlay;
+    BitmapFont font;
+
 
     public ScreenMenu(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
@@ -37,12 +39,12 @@ public class ScreenMenu extends Screen{
         texture = resourseManager.getTexture(ResourseManager.bcgMenu);
         bttExit = new Button(resourseManager.getTexture(ResourseManager.txtExit), camera.position.x+ vectorExit.x, camera.position.y+vectorExit.y, 200, 100);
         bttSettings = new Button(resourseManager.getTexture(ResourseManager.txtSettings), camera.position.x+ vectorSettings.x, camera.position.y+vectorSettings.y, 100,100);
+        this.font = resourseManager.getFont();
         bttPlay = new Button(resourseManager.getTexture(ResourseManager.bttPlay), camera.position.x+ vectorStart.x, camera.position.y+ vectorStart.y, 300, 150);
         music = resourseManager.getMusic(ResourseManager.music);
         music.setLooping(true);
-        music.setVolume(MyGdxGame.VOLUME);
+        music.setVolume(0);
         music.play();
-
     }
 
     @Override
@@ -63,11 +65,14 @@ public class ScreenMenu extends Screen{
         bttSettings.render(batch);
         bttExit.render(batch);
         bttPlay.render(batch);
+
+        font.draw(batch, resourseManager.getTranslator().get("play")[MyGdxGame.language], 100, 100);
         batch.end();
 
         bttExit.update(camera);
         bttSettings.update(camera);
         bttPlay.update(camera);
+
     }
 
     @Override
@@ -113,14 +118,14 @@ public class ScreenMenu extends Screen{
         bttSettings.setClickListener(new Button.onClickListener() {
             @Override
             public void click() {
-                music.stop();
-                screenManager.setScreen(new ScreenSetting(screenManager, resourseManager));
+                screenManager.setScreen(new ScreenSetting(screenManager, resourseManager, music));
             }
         });
         bttPlay.setClickListener(new Button.onClickListener() {
             @Override
             public void click() {
                 screenManager.setScreen(new ScreenPlay(screenManager, resourseManager));
+                music.stop();
             }
         });
     }

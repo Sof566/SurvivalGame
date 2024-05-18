@@ -11,10 +11,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.plaf.PanelUI;
+
 public class ResourseManager {
-    //public static final String bcgLoading = "images/a1.png";
+    public static final String bcgSetting = "images/SettingsInterface/a1.png";
     public static final String bcgMenu = "images/MenuInterface/2.png";
-    public static final String bcgSetting = "images/test.png";
     public static final String txtSettings = "images/MenuInterface/button_setting.png";
     public static final String txtExit = "images/MenuInterface/button_back.png";
     public static final String txtVolumePlus = "images/SettingsInterface/txtPlus.png";
@@ -24,6 +28,8 @@ public class ResourseManager {
     public static final String animKapitochca = "images/hb.png";
     public static final String touchBackground = "images/PlayInterface/touchBackground.png";
     public static final String touchKnob = "images/PlayInterface/touchKnob.png";
+    public static final String bttTranslTranslationRUS = "images/SettingsInterface/bttRus.png";
+    public static final String bttTranslTranslationANGL = "images/SettingsInterface/bttAngl.png";
 
     public static final String xuita = "images/Player/Xuita.png";
     public static String rockBlock = "images/Blocks/rock.png";
@@ -40,19 +46,34 @@ public class ResourseManager {
     public static String mashroom = "images/Blocks/mashroom.png";
     public static String crystal = "images/Blocks/kristall.png";
     public static String baobab = "images/Blocks/baobab.png";
+    public static String tailSnake = "images/Blocks/snake_tail.png";
+
+    public static String stoneShardling = "images/Enemies/StoneShardlings.png";
 
     public Texture texture;
+
+
     public static final String music = "sound/music/audio_gameKapy.mp3";
     AssetManager assetManager;
+
     private BitmapFont font;
+
+    Map<String, String[]> all = new HashMap<>();
+
+
 
     public void loading() {
         assetManager = new AssetManager();
         loadingImg();
         loadingMusic();
-        //loadingFonts();
+        loadFonts();
+        allTranslator();
     }
 
+    public void allTranslator() {
+        all.put("play", new String[] {"Play", "Играть"});
+        all.put("settings", new String[]{"Settings", "Настройки"});
+    }
     public void loadingImg() {
         assetManager.setLoader(Texture.class, new TextureLoader(new InternalFileHandleResolver()));
         //assetManager.load(bcgLoading, Texture.class);
@@ -82,6 +103,11 @@ public class ResourseManager {
         assetManager.load(mashroom, Texture.class);
         assetManager.load(crystal, Texture.class);
         assetManager.load(baobab, Texture.class);
+        assetManager.load(tailSnake, Texture.class);
+        assetManager.load(bttTranslTranslationRUS, Texture.class);
+        assetManager.load(bttTranslTranslationANGL, Texture.class);
+
+        assetManager.load(stoneShardling, Texture.class);
     }
 
     public void loadingMusic() {
@@ -89,14 +115,15 @@ public class ResourseManager {
         assetManager.load(music, Music.class);
     }
 
-    /*private void loadingFonts() {
+    private void loadFonts() {
         this.font = new BitmapFont();
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/main_font.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/main_font.ttf"));
         parameter.size = 25;
         parameter.color = new Color(1.0F, 1.0F, 1.0F, 1.0F);
         this.font = generator.generateFont(parameter);
-    }*/
+    }
+
 
     public boolean isLoad() {
         return assetManager.update();
@@ -110,6 +137,13 @@ public class ResourseManager {
         return assetManager.get(name);
     }
 
+    public Map<String, String[]> getTranslator() {
+        return all;
+    }
+
+    public BitmapFont getFont() {
+        return this.font;
+    }
     public Music getMusic(String name) {
         return  assetManager.get(name);
     }
@@ -122,4 +156,6 @@ public class ResourseManager {
         assetManager.clear();
         assetManager.dispose();
     }
+
+
 }

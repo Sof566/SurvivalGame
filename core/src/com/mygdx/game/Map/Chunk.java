@@ -1,10 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.Map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Block.Block;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.ResourseManager;
 
 public class Chunk {
     private ResourseManager resourseManager;
@@ -15,17 +17,17 @@ public class Chunk {
     private int X;
     private int Y;
     float rotation;
-    // 0 - отсутствие чанка
-    // 1 - джунгли
-    // 2, 3, 4- море
-    // 5 - пляж
-    // 6 16- кристальный лес
-    // 7 17- кристальный лес
 
-    // 8 9 10 11 - джунгли, пляж
-    // 12 13 14 15 - Море, пляж
     public Chunk(ResourseManager resourseManager, Vector2 position, int tipe, int X, int Y) {
-        this.resourseManager = resourseManager;
+        this.resourseManager = resourseManager;// 0 - отсутствие чанка
+        // 1 - джунгли
+        // 2, 3, 4- море
+        // 5 - пляж
+        // 6 16- кристальный лес
+        // 7 17- кристальный лес
+
+        // 8 9 10 11 - джунгли, пляж
+        // 12 13 14 15 - Море, пляж;
         this.position = position;
         setBiomeType(tipe);
         rotation = 0;

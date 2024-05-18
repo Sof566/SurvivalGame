@@ -1,7 +1,6 @@
 package com.mygdx.game.Screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
@@ -15,16 +14,17 @@ import com.mygdx.game.Block.Grass;
 import com.mygdx.game.Block.Mushroom;
 import com.mygdx.game.Block.Rock;
 import com.mygdx.game.Block.Spike;
-import com.mygdx.game.Button;
-import com.mygdx.game.Chunk;
+import com.mygdx.game.Block.TailSnake;
+import com.mygdx.game.GameInterface.Button;
+import com.mygdx.game.Map.Chunk;
 import com.mygdx.game.Entity.Entity;
 import com.mygdx.game.Entity.Player;
+import com.mygdx.game.Entity.StoneShardlings;
 import com.mygdx.game.GameInterface.InventorySlot;
 import com.mygdx.game.GameInterface.UiInventory;
 import com.mygdx.game.GameInterface.UniversalButton;
 import com.mygdx.game.GameObject;
-import com.mygdx.game.Items.Items;
-import com.mygdx.game.MapGenerator;
+import com.mygdx.game.Map.MapGenerator;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Projectile.Dart;
 import com.mygdx.game.Projectile.Projectile;
@@ -53,6 +53,7 @@ public class ScreenPlay extends Screen{
     private Baobab baobab;
     private DartThrower dartThrower;
     private Dart dart;
+    private TailSnake tailSnake;
     private UiHearts uiHealthBar;
     private List<Entity> entities;
     private List<Block> blocks;
@@ -69,6 +70,11 @@ public class ScreenPlay extends Screen{
     private UniversalButton universal;
     private Button universalButton;
     Button bttInventory;
+
+    private StoneShardlings stoneShardling;
+
+
+    public Texture test = new Texture("images/pol00.png");
     protected ScreenPlay(GameScreenManager screenManager, ResourseManager resourseManager) {
         super(screenManager, resourseManager);
         this.screenManager = screenManager;
@@ -98,14 +104,26 @@ public class ScreenPlay extends Screen{
         Vector2 pon6 = new Vector2(-100, -100);
         Vector2 pon7 = new Vector2(-200, -100);
         Vector2 pon8 = new Vector2(-800, -100);
+        Vector2 pon9 = new Vector2(-350, -100);
+
+        Vector2 pon10 = new Vector2(200, -100);
+
+
         rock = new Rock(resourseManager, pon2);
         spike = new Spike(resourseManager, pon3);
         grass = new Grass(resourseManager, pon5);
         mushroom = new Mushroom(resourseManager, pon6);
         crystal = new Crystal(resourseManager, pon7);
         baobab = new Baobab(resourseManager, pon8);
+        tailSnake = new TailSnake(resourseManager, pon9);
         dartThrower = new DartThrower(resourseManager, pon4, 45);
+
+        stoneShardling = new StoneShardlings(resourseManager, pon10);
+
+
         entities.add(player);
+        //entities.add(stoneShardling);
+
         blocks.add(rock);
         blocks.add(spike);
         blocks.add(dartThrower);
@@ -113,6 +131,9 @@ public class ScreenPlay extends Screen{
         blocks.add(mushroom);
         blocks.add(crystal);
         blocks.add(baobab);
+        blocks.add(tailSnake);
+
+
         renderList.add(rock);
         renderList.add(spike);
         renderList.add(dartThrower);
@@ -121,6 +142,8 @@ public class ScreenPlay extends Screen{
         renderList.add(mushroom);
         renderList.add(crystal);
         renderList.add(baobab);
+        renderList.add(tailSnake);
+        renderList.add(stoneShardling);
     }
 
     @Override
@@ -131,6 +154,7 @@ public class ScreenPlay extends Screen{
 
         player.setVelocity(joystick.getKnobPercentWalk());
         player.update(dt, camera);
+        stoneShardling.update(dt, camera);
 
 
         universal.update(camera);
@@ -209,6 +233,12 @@ public class ScreenPlay extends Screen{
     protected void render(SpriteBatch batch) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        /*batch.draw(test, 0, 0, 1000, 1000);
+        batch.draw(test, 1000, 0, 1000, 1000);
+        batch.draw(test, 0, -1000, 1000, 1000);
+        batch.draw(test, -1000, 0, 1000, 1000);
+        batch.draw(test, 0, 1000, 1000, 1000);*/
+
         for (Chunk chunk : chunkList) {
             if (ChunkManager(chunk)){
                 chunk.render(batch);
@@ -224,6 +254,7 @@ public class ScreenPlay extends Screen{
         }
         universalButton.render(batch);
         bttInventory.render(batch);
+
         batch.end();
         joystick.render(batch);
         universal.render(batch);
